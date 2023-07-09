@@ -16,6 +16,8 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "node-audio-volume-mixer": "^1.0.3"
+    "@socket.io/admin-ui": "^0.5.1",
+    "node-audio-volume-mixer": "^1.0.3",
+    "socket.io": "^4.7.1"
   }
 }
