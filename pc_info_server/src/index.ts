@@ -6,7 +6,7 @@ const PORT = 3000;
 interface ServerToClientEvents {}
 
 interface ClientToServerEvents {
-  isMute: () => boolean;
+  isMute: (_: null, cal: (mute: boolean) => void) => void;
 }
 
 interface InterServerEvents {
@@ -24,7 +24,7 @@ const io = new Server<
   SocketData
 >(PORT, {
   cors: {
-    origin: ["https://admin.socket.io"],
+    origin: "*",
     credentials: true,
   },
 });
@@ -37,8 +37,10 @@ instrument(io, {
 
 io.on("connection", (socket) => {
   console.log(`socket ${socket.id} connected`);
-
-  socket.on("isMute", () => volume.isMasterMuted());
+  const vol = volume.isMasterMuted();
+  socket.on("isMute", (_, cal) => {
+    cal(vol);
+  });
 
   socket.on("disconnect", (reason) => {
     console.log(`socket ${socket.id} disconnected due to ${reason}`);
