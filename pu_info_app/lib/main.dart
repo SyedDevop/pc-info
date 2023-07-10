@@ -1,6 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pu_info_app/models/server_model.dart';
+import 'theme.dart';
 
-void main() {
+// TODO: (1) Separate the ui widgets.
+// TODO: (2) Create the Form widget.
+// TODO: (3) Use ShowBottomSheet for form in put of the server.
+void main() async {
+  // IO.Socket socket = IO.io(
+  //   "http://localhost:3000",
+  //   IO.OptionBuilder().setTransports(["websocket"]).build(),
+  // );
+  // socket.onConnect((_) {
+  //   print("Connect");
+  // });
+  // socket.emitWithAck("isMute", "", ack: (e) => print(e));
+  //
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(ServerAdapter());
   runApp(const MyApp());
 }
 
@@ -10,12 +29,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: "pc info app",
+      debugShowCheckedModeBanner: false,
+      theme: MyTheme.light,
+      darkTheme: MyTheme.dark,
+      themeMode: ThemeMode.system,
+      home: const MyHomePage(title: "Pc Info"),
     );
   }
 }
