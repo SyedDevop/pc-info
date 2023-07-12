@@ -20,4 +20,9 @@ class Server {
 
   @HiveField(3)
   bool isConnected;
+
+  @override
+  String toString() {
+    return "Server = name:${name.toString()}, ip:${ipAddress.toString()}, mac:${macAddress.toString()}";
+  }
 }
