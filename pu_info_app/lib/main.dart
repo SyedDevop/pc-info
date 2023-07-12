@@ -7,8 +7,7 @@ import 'theme.dart';
 
 // TODO: (2) Create the Form widget.
 // TODO: (3) Use ShowBottomSheet for form in put of the server.
-// * create and add Form the adding new Server.
-// * style the bottom sheet.
+// * Separate the ui and logic widget form the ShowBottomSheet.
 void main() async {
   // IO.Socket socket = IO.io(
   //   "http://localhost:3000",
@@ -23,6 +22,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(ServerAdapter());
+  var box = await Hive.openBox<Server>('server');
+  box.values.forEach((e) => print(e.toString()));
   runApp(const MyApp());
 }
 

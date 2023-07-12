@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
+
+import '../models/server_model.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -21,48 +25,74 @@ class HomeScreen extends StatelessWidget {
   }
 
   _showBottomSheet(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
+    final nameCon = TextEditingController();
+    final ipCon = TextEditingController();
     return showBottomSheet(
         context: context,
         builder: (context) {
           return Container(
-            height: 450.00,
+            height: 400.00,
             padding:
-                const EdgeInsets.symmetric(vertical: 35.5, horizontal: 15.0),
+                const EdgeInsets.symmetric(vertical: 60.0, horizontal: 15.0),
             child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      textCapitalization: TextCapitalization.sentences,
-                      keyboardType: TextInputType.name,
-                      autofocus: true,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(labelText: "* Name"),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter a name";
-                        }
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextFormField(
+                    controller: nameCon,
+                    textCapitalization: TextCapitalization.sentences,
+                    keyboardType: TextInputType.name,
+                    autofocus: true,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(labelText: "* Name"),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter a name";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20.0),
+                  // FIX: add submit function on done press.
+                  TextFormField(
+                    controller: ipCon,
+                    textCapitalization: TextCapitalization.none,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.done,
+                    decoration:
+                        const InputDecoration(labelText: "* Ip Address"),
+                    validator: (val) {
+                      RegExp valRe =
+                          RegExp(r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}:\d{4}$');
+                      if (val != null && valRe.hasMatch(val)) {
                         return null;
-                      },
-                    ),
-                    const SizedBox(height: 20.0),
-                    TextFormField(
-                      textCapitalization: TextCapitalization.none,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(labelText: "* Ip Address"),
-                      validator: (val) {
-                        RegExp valRe =
-                            RegExp(r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}:\d{4}$');
-                        if (val != null && valRe.hasMatch(val)) {
-                          return null;
-                        }
-                        return "Please enter valid Ip";
-                      },
-                    ),
-                  ],
-                )),
+                      }
+                      return "Please enter valid Ip";
+                    },
+                  ),
+                  const SizedBox(height: 20.0),
+                  OutlinedButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Adding data to database'),
+                          ),
+                        );
+                        context.pop();
+                        var serverBox = Hive.box<Server>("server");
+                        Server newServer =
+                            Server(name: nameCon.text, ipAddress: ipCon.text);
+                        serverBox.add(newServer);
+                      }
+                    },
+                    child: const Text("submit"),
+                  )
+                ],
+              ),
+            ),
           );
         });
   }
