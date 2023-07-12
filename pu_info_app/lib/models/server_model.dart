@@ -7,8 +7,8 @@ class Server {
   Server(
       {required this.name,
       required this.ipAddress,
-      required this.macAddress,
-      required this.isConnected});
+      this.macAddress = "--.--.--.--.--.--",
+      this.isConnected = false});
   @HiveField(0)
   String name;
 

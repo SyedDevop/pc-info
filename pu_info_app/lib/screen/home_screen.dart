@@ -21,11 +21,48 @@ class HomeScreen extends StatelessWidget {
   }
 
   _showBottomSheet(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
     return showBottomSheet(
         context: context,
         builder: (context) {
           return Container(
-            child: Text("Helll"),
+            height: 450.00,
+            padding:
+                const EdgeInsets.symmetric(vertical: 35.5, horizontal: 15.0),
+            child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      textCapitalization: TextCapitalization.sentences,
+                      keyboardType: TextInputType.name,
+                      autofocus: true,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(labelText: "* Name"),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter a name";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20.0),
+                    TextFormField(
+                      textCapitalization: TextCapitalization.none,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(labelText: "* Ip Address"),
+                      validator: (val) {
+                        RegExp valRe =
+                            RegExp(r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}:\d{4}$');
+                        if (val != null && valRe.hasMatch(val)) {
+                          return null;
+                        }
+                        return "Please enter valid Ip";
+                      },
+                    ),
+                  ],
+                )),
           );
         });
   }

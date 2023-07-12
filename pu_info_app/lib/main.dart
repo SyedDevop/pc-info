@@ -7,8 +7,8 @@ import 'theme.dart';
 
 // TODO: (2) Create the Form widget.
 // TODO: (3) Use ShowBottomSheet for form in put of the server.
-// * style the bottom sheet.
 // * create and add Form the adding new Server.
+// * style the bottom sheet.
 void main() async {
   // IO.Socket socket = IO.io(
   //   "http://localhost:3000",
