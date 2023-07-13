@@ -28,6 +28,20 @@ class HomeScreen extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
     final nameCon = TextEditingController();
     final ipCon = TextEditingController();
+    void handleSubmit(BuildContext context) {
+      if (formKey.currentState!.validate()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Adding data to database'),
+          ),
+        );
+        context.pop();
+        var serverBox = Hive.box<Server>("server");
+        Server newServer = Server(name: nameCon.text, ipAddress: ipCon.text);
+        serverBox.add(newServer);
+      }
+    }
+
     return showBottomSheet(
         context: context,
         builder: (context) {
@@ -55,7 +69,6 @@ class HomeScreen extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 20.0),
-                  // FIX: add submit function on done press.
                   TextFormField(
                     controller: ipCon,
                     textCapitalization: TextCapitalization.none,
@@ -71,22 +84,12 @@ class HomeScreen extends StatelessWidget {
                       }
                       return "Please enter valid Ip";
                     },
+                    onEditingComplete: () => handleSubmit(context),
                   ),
                   const SizedBox(height: 20.0),
                   OutlinedButton(
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Adding data to database'),
-                          ),
-                        );
-                        context.pop();
-                        var serverBox = Hive.box<Server>("server");
-                        Server newServer =
-                            Server(name: nameCon.text, ipAddress: ipCon.text);
-                        serverBox.add(newServer);
-                      }
+                      handleSubmit(context);
                     },
                     child: const Text("submit"),
                   )
