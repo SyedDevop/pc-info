@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pu_info_app/socket_server.dart';
 
 import '/widget/server/server_bottom_sheet.dart';
 import '/models/server_model.dart';
@@ -49,6 +50,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         subtitle: Text(
                             "IP : ${curServer.ipAddress}\nMac : ${curServer.macAddress}"),
                         isThreeLine: true,
+                        onTap: () {
+                          SocketService(curServer, index);
+                        },
                       ),
                     );
                   });

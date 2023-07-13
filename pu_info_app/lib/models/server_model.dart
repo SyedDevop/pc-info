@@ -7,7 +7,7 @@ class Server {
   Server(
       {required this.name,
       required this.ipAddress,
-      this.macAddress = "--.--.--.--.--.--",
+      this.macAddress,
       this.isConnected = false});
   @HiveField(0)
   String name;
@@ -16,13 +16,20 @@ class Server {
   String ipAddress;
 
   @HiveField(2)
-  String macAddress;
+  String? macAddress;
 
-  @HiveField(3)
   bool isConnected;
 
   @override
   String toString() {
     return "Server = name:${name.toString()}, ip:${ipAddress.toString()}, mac:${macAddress.toString()}";
+  }
+
+  Server copyWith({String? mac, bool? isConnect}) {
+    return Server(
+        name: name,
+        ipAddress: ipAddress,
+        macAddress: mac ?? macAddress,
+        isConnected: isConnect ?? isConnected);
   }
 }

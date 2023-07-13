@@ -19,23 +19,20 @@ class ServerAdapter extends TypeAdapter<Server> {
     return Server(
       name: fields[0] as String,
       ipAddress: fields[1] as String,
-      macAddress: fields[2] as String,
-      isConnected: fields[3] as bool,
+      macAddress: fields[2] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Server obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
       ..write(obj.ipAddress)
       ..writeByte(2)
-      ..write(obj.macAddress)
-      ..writeByte(3)
-      ..write(obj.isConnected);
+      ..write(obj.macAddress);
   }
 
   @override

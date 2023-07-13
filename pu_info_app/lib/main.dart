@@ -9,10 +9,7 @@ import 'theme.dart';
 // TODO: (3) Use ShowBottomSheet for form in put of the server.
 // * Separate the ui and logic widget form the ShowBottomSheet.
 void main() async {
-  // IO.Socket socket = IO.io(
-  //   "http://localhost:3000",
-  //   IO.OptionBuilder().setTransports(["websocket"]).build(),
-  // );
+  // IO.Socket socket = SocketService(url: "http://192.168.1.106:3000").socket;
   // socket.onConnect((_) {
   //   print("Connect");
   // });
