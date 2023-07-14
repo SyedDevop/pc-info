@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             "IP : ${curServer.ipAddress}\nMac : ${curServer.macAddress}"),
                         isThreeLine: true,
                         onTap: () {
-                          SocketService(curServer, index);
+                          SocketService.init(index);
                         },
                       ),
                     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pu_info_app/socket_server.dart';
 
 import 'models/server_model.dart';
 import 'router/router.dart';
@@ -19,6 +20,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(ServerAdapter());
+  SocketService();
   var box = await Hive.openBox<Server>('server');
   box.values.forEach((e) => print(e.toString()));
   runApp(const MyApp());
