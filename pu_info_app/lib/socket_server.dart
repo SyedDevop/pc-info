@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'models/server_model.dart';
+import 'const.dart';
 
 class SocketService {
   static SocketService? _instance;
@@ -21,22 +21,29 @@ class SocketService {
   }
   void _init(int id) {
     Box<Server> serBox = Hive.box<Server>("server");
+    Box<int> prevSess = Hive.box(kPrevSess);
     Server curServer = serBox.getAt(id)!;
     _socket?.dispose();
     _socket = IO.io(
       "http://${curServer.ipAddress}",
-      IO.OptionBuilder().setTransports(["websocket"]).enableForceNew().build(),
+      IO.OptionBuilder()
+          .setTransports(["websocket"])
+          .enableForceNew()
+          .setReconnectionDelay(1000)
+          .setReconnectionAttempts(5)
+          .build(),
     );
-    socket.onConnect((_) {
+    _socket?.onConnect((e) {
       curServer.isConnected = true;
+      prevSess.put(kPrevSessKey, id);
       serBox.putAt(id, curServer);
       if (curServer.macAddress == null) {
-        socket.emitWithAck("getMac", "", ack: (String macAddress) {
+        _socket?.emitWithAck("getMac", "", ack: (String macAddress) {
           curServer.macAddress = macAddress;
           serBox.putAt(id, curServer);
         });
       } else {
-        socket.emitWithAck("getMac", "", ack: (String macAddress) {
+        _socket?.emitWithAck("getMac", "", ack: (String macAddress) {
           if (curServer.macAddress != macAddress) {
             _socket?.dispose();
             throw Exception(
@@ -45,16 +52,18 @@ class SocketService {
         });
       }
     });
-    if (serverId != null) {
-      Server preServer = serBox.getAt(serverId!)!;
-      preServer.isConnected = false;
-      serBox.putAt(serverId!, preServer);
-    }
-
+    _socket!.onDisconnect((_) {
+      if (serverId != null) {
+        Server preServer = serBox.getAt(serverId!)!;
+        preServer.isConnected = false;
+        serBox.putAt(serverId!, preServer);
+      }
+    });
     serverId = id;
   }
 
-  IO.Socket get socket => _socket!;
+  static IO.Socket? get socket => SocketService()._socket;
+
   static init(int id) {
     if (_instance == null) {
       throw ArgumentError(
