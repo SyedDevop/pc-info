@@ -25,7 +25,9 @@ void main() async {
   final box = await Hive.openBox<Server>(kServer);
   SocketService(prevBox.get(kPrevSessKey));
   print(prevBox.values);
-  box.values.forEach((e) => print(e.toString()));
+  for (var e in box.values) {
+    print(e.toString());
+  }
   runApp(const MyApp());
 }
 
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: "pc info app",
+      title: 'pc info app',
       debugShowCheckedModeBanner: false,
       theme: MyTheme.light,
       darkTheme: MyTheme.dark,

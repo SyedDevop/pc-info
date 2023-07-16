@@ -22,7 +22,7 @@ class Server {
 
   @override
   String toString() {
-    return "Server = name:${name.toString()}, ip:${ipAddress.toString()}, mac:${macAddress.toString()}";
+    return 'Server = name:${name.toString()}, ip:${ipAddress.toString()}, mac:${macAddress.toString()}';
   }
 
   Server copyWith({String? mac, bool? isConnect}) {

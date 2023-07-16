@@ -17,20 +17,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    serverBox = Hive.box("server");
+    serverBox = Hive.box('server');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Pc Info")),
+      appBar: AppBar(title: const Text('Pc Info')),
       body: Center(
         child: ValueListenableBuilder(
             valueListenable: serverBox.listenable(),
             builder: (context, box, _) {
               if (box.values.isEmpty) {
                 return const Center(
-                  child: Text("No contacts"),
+                  child: Text('No contacts'),
                 );
               }
               return ListView.builder(
@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         title: Text(curServer.name),
                         subtitle: Text(
-                            "IP : ${curServer.ipAddress}\nMac : ${curServer.macAddress}"),
+                            'IP : ${curServer.ipAddress}\nMac : ${curServer.macAddress}'),
                         isThreeLine: true,
                         onTap: () {
                           SocketService.init(index);
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: Builder(builder: (context) {
         return FloatingActionButton(
           onPressed: () => showServerBottomSheet(context),
-          tooltip: "Add Server",
+          tooltip: 'Add Server',
           child: const Icon(Icons.add),
         );
       }),

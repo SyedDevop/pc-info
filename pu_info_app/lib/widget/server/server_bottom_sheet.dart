@@ -33,7 +33,7 @@ class AddServerForm extends StatelessWidget {
         ),
       );
       context.pop();
-      var serverBox = Hive.box<Server>("server");
+      var serverBox = Hive.box<Server>('server');
       Server newServer = Server(name: nameCon.text, ipAddress: ipCon.text);
       serverBox.add(newServer);
     }
@@ -52,10 +52,10 @@ class AddServerForm extends StatelessWidget {
             keyboardType: TextInputType.name,
             autofocus: true,
             textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(labelText: "* Name"),
+            decoration: const InputDecoration(labelText: '* Name'),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return "Please enter a name";
+                return 'Please enter a name';
               }
               return null;
             },
@@ -67,15 +67,15 @@ class AddServerForm extends StatelessWidget {
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.done,
             decoration: const InputDecoration(
-              labelText: "* Ip Address",
-              hintText: "192.168.0.1:3000",
+              labelText: '* Ip Address',
+              hintText: '192.168.0.1:3000',
             ),
             validator: (val) {
               RegExp valRe = RegExp(r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}:\d{4}$');
               if (val != null && valRe.hasMatch(val)) {
                 return null;
               }
-              return "Please enter valid Ip";
+              return 'Please enter valid Ip';
             },
             onEditingComplete: () => _handleSubmit(context),
           ),
@@ -84,7 +84,7 @@ class AddServerForm extends StatelessWidget {
             onPressed: () {
               _handleSubmit(context);
             },
-            child: const Text("submit"),
+            child: const Text('submit'),
           )
         ],
       ),

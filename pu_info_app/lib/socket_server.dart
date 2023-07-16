@@ -20,16 +20,16 @@ class SocketService {
     }
   }
   void _init(int id) {
-    Box<Server> serBox = Hive.box<Server>("server");
+    Box<Server> serBox = Hive.box<Server>('server');
     Box<int> prevSess = Hive.box(kPrevSess);
     Server curServer = serBox.getAt(id)!;
     _socket?.dispose();
     _socket = IO.io(
-      "http://${curServer.ipAddress}",
+      'http://${curServer.ipAddress}',
       IO.OptionBuilder()
-          .setTransports(["websocket"])
+          .setTransports(['websocket'])
           .enableForceNew()
-          .setReconnectionDelay(1000)
+          .setReconnectionDelay(200)
           .setReconnectionAttempts(5)
           .build(),
     );
@@ -38,20 +38,22 @@ class SocketService {
       prevSess.put(kPrevSessKey, id);
       serBox.putAt(id, curServer);
       if (curServer.macAddress == null) {
-        _socket?.emitWithAck("getMac", "", ack: (String macAddress) {
+        _socket?.emitWithAck('getMac', '', ack: (String macAddress) {
           curServer.macAddress = macAddress;
           serBox.putAt(id, curServer);
         });
       } else {
-        _socket?.emitWithAck("getMac", "", ack: (String macAddress) {
+        _socket?.emitWithAck('getMac', '', ack: (String macAddress) {
           if (curServer.macAddress != macAddress) {
             _socket?.dispose();
             throw Exception(
-                "Sorry this server is already rigister to this mac: $macAddress");
+                'Sorry this server is already rigister to this mac: $macAddress');
           }
         });
       }
     });
+    _socket!
+        .onReconnectFailed((data) => print('From onReconnectFailed  $data'));
     _socket!.onDisconnect((_) {
       if (serverId != null) {
         Server preServer = serBox.getAt(serverId!)!;
@@ -67,7 +69,7 @@ class SocketService {
   static init(int id) {
     if (_instance == null) {
       throw ArgumentError(
-          "Socket Server must be initialized first. ", "SocketService");
+          'Socket Server must be initialized first. ', 'SocketService');
     }
     SocketService(id)._init(id);
   }
