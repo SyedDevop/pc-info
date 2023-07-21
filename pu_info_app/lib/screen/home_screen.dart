@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {
                           final connetServerId = SocketService().serverId;
                           if (curServer.isConnected) {
-                            print('go to differnt pase');
+                            context.pushNamed('utils');
                           } else if (connetServerId != null &&
                               connetServerId != index) {
                             showDialog(

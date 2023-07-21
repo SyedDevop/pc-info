@@ -9,5 +9,10 @@ final appRouter = GoRouter(
       name: 'home',
       builder: (context, state) => const HomeScreen(),
     ),
+    GoRoute(
+      path: '/utils',
+      name: 'utils',
+      builder: (context, state) => const UtilsScreen(),
+    ),
   ],
 );
