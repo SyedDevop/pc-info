@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pu_info_app/socket_server.dart';
 
@@ -51,7 +52,33 @@ class _HomeScreenState extends State<HomeScreen> {
                             'IP : ${curServer.ipAddress}\nMac : ${curServer.macAddress}'),
                         isThreeLine: true,
                         onTap: () {
-                          SocketService.init(index);
+                          final connetServerId = SocketService().serverId;
+                          if (curServer.isConnected) {
+                            print('go to differnt pase');
+                          } else if (connetServerId != null &&
+                              connetServerId != index) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Server Action Alert'),
+                                content: const Text(
+                                    'You are about to switch servers while currently connected to another server. Please confirm your action.'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () => context.pop(),
+                                      child: const Text('no')),
+                                  TextButton(
+                                      onPressed: () {
+                                        SocketService.init(index);
+                                        context.pop();
+                                      },
+                                      child: const Text('yes')),
+                                ],
+                              ),
+                            );
+                          } else {
+                            SocketService.init(index);
+                          }
                         },
                       ),
                     );
