@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pu_info_app/widget/utils/utils_cards.dart';
 
 class UtilsScreen extends StatelessWidget {
   const UtilsScreen({super.key});
@@ -10,23 +11,25 @@ class UtilsScreen extends StatelessWidget {
       body: GridView.count(
         crossAxisCount: 4,
         children: const [
-          Card(
-            child: Text('Audio'),
+          UtilCard(
+            icon: Icon(Icons.spatial_audio),
+            footer: 'Audio',
           ),
-          Card(
-            child: Text('Audio'),
+          UtilCard(
+            icon: Icon(Icons.spatial_audio),
+            footer: 'Processes',
           ),
-          Card(
-            child: Text('Audio'),
+          UtilCard(
+            icon: Icon(Icons.spatial_audio),
+            footer: 'Performances',
           ),
-          Card(
-            child: Text('Audio'),
+          UtilCard(
+            icon: Icon(Icons.spatial_audio),
+            footer: 'Audio',
           ),
-          Card(
-            child: Text('Audio'),
-          ),
-          Card(
-            child: Text('Audio'),
+          UtilCard(
+            icon: Icon(Icons.spatial_audio),
+            footer: 'Audio',
           ),
         ],
       ),
