@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:pu_info_app/socket_server.dart';
 
+import '/font/font_icon.dart';
+import '/socket_server.dart';
 import '/widget/server/server_bottom_sheet.dart';
 import '/models/server_model.dart';
 
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Card(
                       child: ListTile(
                         leading: Icon(
-                          Icons.monitor_heart_rounded,
+                          FFIcons.cloudMonitor,
                           size: 35.0,
                           color: curServer.isConnected
                               ? Colors.greenAccent

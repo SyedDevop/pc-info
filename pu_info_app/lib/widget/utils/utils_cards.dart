@@ -7,23 +7,23 @@ class UtilCard extends StatelessWidget {
     required this.footer,
   });
 
-  final Icon icon;
+  final IconData icon;
   final String footer;
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
+    return Card(
       child: Column(
         children: [
           Expanded(
             child: Icon(
-              Icons.spatial_audio,
+              icon,
               size: 40,
             ),
           ),
           Text(
-            'Audio',
-            style: TextStyle(
+            footer,
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),

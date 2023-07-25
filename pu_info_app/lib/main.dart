@@ -7,9 +7,6 @@ import 'models/server_model.dart';
 import 'router/router.dart';
 import 'theme.dart';
 
-// TODO: (2) Create the Form widget.
-// TODO: (3) Use ShowBottomSheet for form in put of the server.
-// * Separate the ui and logic widget form the ShowBottomSheet.
 void main() async {
   // IO.Socket socket = SocketService(url: "http://192.168.1.106:3000").socket;
   // socket.onConnect((_) {
