@@ -21,11 +21,11 @@ class UtilCard extends StatelessWidget {
               size: 40,
             ),
           ),
-          Text(
-            footer,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text(
+              footer,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           )
         ],
