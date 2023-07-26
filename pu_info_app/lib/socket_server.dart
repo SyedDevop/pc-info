@@ -55,6 +55,8 @@ class SocketService {
         // If the MAC address is available, check if it matches the server's MAC
         _checkMacAddress(id, curServer.macAddress!);
       }
+      // Store the current server ID for reference
+      serverId = id;
     });
     // Set up event handler for socket reconnection failure
     _socket!.onReconnectFailed((_) {
@@ -68,9 +70,6 @@ class SocketService {
       preServer.isConnected = false;
       serBox.putAt(id, preServer);
     });
-
-    // Store the current server ID for reference
-    serverId = id;
   }
 
   // Get the socket instance
