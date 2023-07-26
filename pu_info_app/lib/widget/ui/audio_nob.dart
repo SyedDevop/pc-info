@@ -5,7 +5,14 @@ class AudioNob extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Stack(
+      children: [
+        CustomPaint(
+          painter: AudioNobPainter(),
+          child: Container(),
+        ),
+      ],
+    );
   }
 }
 

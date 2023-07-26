@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pu_info_app/font/font_icon.dart';
-import 'package:pu_info_app/widget/utils/utils_cards.dart';
+
+import '/font/font_icon.dart';
+import '/widget/utils/utils_cards.dart';
 
 class UtilsScreen extends StatelessWidget {
   const UtilsScreen({super.key});

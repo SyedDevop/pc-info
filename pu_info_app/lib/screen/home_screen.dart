@@ -54,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         isThreeLine: true,
                         onTap: () {
                           final connetServerId = SocketService().serverId;
-                          print(connetServerId);
                           if (curServer.isConnected) {
                             context.pushNamed('utils');
                           } else if (connetServerId != null) {
