@@ -8,7 +8,7 @@ class TestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Test Screen')),
-      body: const AudioNob(),
+      body: const Text("test"),
     );
   }
 }
