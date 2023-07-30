@@ -8,7 +8,10 @@ interface ServerToClientEvents {}
 
 interface ClientToServerEvents {
   isMute: (_: null, cal: (mute: boolean) => void) => void;
+  setMute: (sate: boolean) => void;
   getMac: (_: null, cal: (mac: string) => void) => void;
+  setVolume: (vol: number) => void;
+  getVolume: (_: null, cal: (vol: number) => void) => void;
 }
 
 interface InterServerEvents {
@@ -40,11 +43,19 @@ instrument(io, {
 io.on("connection", (socket) => {
   console.log(`socket ${socket.id} connected`);
 
-  socket.on("isMute", (_, cal) => {
-    const vol = volume.isMasterMuted();
-    cal(vol);
-  });
+  socket.on("isMute", (_, cal) => cal(volume.isMasterMuted()));
+
   socket.on("getMac", (_, cal) => cal(getMacAddress()));
+
+  socket.on("getVolume", (_, cal) =>
+    cal(volume.getMasterVolumeLevelScalar() * 100)
+  );
+  socket.on("setVolume", (vol) => {
+    volume.setMasterVolumeLevelScalar(vol / 100);
+  });
+  socket.on("setMute", (state) => {
+    volume.muteMaster(state);
+  });
   socket.on("disconnect", (reason) => {
     console.log(`socket ${socket.id} disconnected due to ${reason}`);
   });
