@@ -7,7 +7,7 @@ type Event struct {
 	Payload json.RawMessage `json:"payload"`
 }
 
-type EventHandler func(event Event) error
+type EventHandler func(event Event, c *Client) error
 
 const (
 	IsMute = "is_mute"

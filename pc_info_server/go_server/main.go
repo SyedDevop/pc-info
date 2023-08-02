@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"sync"
@@ -16,10 +17,12 @@ type Server struct {
 }
 
 func NewServer() *Server {
-	return &Server{
+	ser := &Server{
 		clients:   make(ClientList),
 		handelers: make(map[string]EventHandler),
 	}
+	ser.setupEventHandlers()
+	return ser
 }
 
 var wsUpgrader = websocket.Upgrader{
@@ -62,13 +65,17 @@ func (s *Server) wsEndpoint(w http.ResponseWriter, r *http.Request) {
 
 	// String client process
 	go client.readMessages()
+	go client.writeMessages()
 }
 
 func (s *Server) addClient(client *Client) {
 	s.Lock()
 	defer s.Unlock()
 
-	s.clients[client] = client.wsConn.LocalAddr().Network()
+	clientId := client.wsConn.LocalAddr().String()
+
+	s.clients[client] = clientId
+	fmt.Println("New client connected:", clientId)
 }
 
 func (s *Server) removeClient(client *Client) {
@@ -78,6 +85,27 @@ func (s *Server) removeClient(client *Client) {
 	if _, ok := s.clients[client]; ok {
 		client.wsConn.Close()
 		delete(s.clients, client)
+	}
+}
+
+func (s *Server) setupEventHandlers() {
+	s.handelers[IsMute] = SendIsMute
+}
+
+func SendIsMute(event Event, c *Client) error {
+	fmt.Println(event)
+
+	return nil
+}
+
+func (s *Server) routeEvent(event Event, c *Client) error {
+	if handler, ok := s.handelers[event.Type]; ok {
+		if err := handler(event, c); err != nil {
+			return err
+		}
+		return nil
+	} else {
+		return errors.New("there is no such event types")
 	}
 }
 
