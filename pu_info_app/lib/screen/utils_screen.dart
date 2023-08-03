@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pu_info_app/models/audio_modle.dart';
 import 'package:pu_info_app/widget/ui/audio_nob.dart';
 
 import 'package:pu_info_app/socket_server.dart';
@@ -72,14 +73,11 @@ class _AudioControleState extends State<AudioControle> {
   void initState() {
     super.initState();
     socket = SocketService.socket!;
-    socket.emitWithAck('getVolume', '', ack: (double vol) {
+    socket.emitWithAck('getAudioState', '', ack: (audioState) {
+      final audio = AudioState.fromJson(audioState);
       setState(() {
-        initValue = vol.floorToDouble();
-      });
-    });
-    socket.emitWithAck('isMute', '', ack: (bool mute) {
-      setState(() {
-        isMute = mute;
+        initValue = audio.volume;
+        isMute = audio.isMute;
       });
     });
   }
@@ -88,6 +86,11 @@ class _AudioControleState extends State<AudioControle> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Text(
+          'Mater Volume',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        const SizedBox(height: 15.0),
         AudioNob(
           initialValue: initValue,
           onChange: (value) => socket.emit('setVolume', value.floor()),
