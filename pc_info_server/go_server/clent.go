@@ -21,16 +21,19 @@ var (
 type ClientList map[*Client]string
 
 type Client struct {
-	wsConn *websocket.Conn
-	server *Server
-	egress chan Event
+	wsConn   *websocket.Conn
+	server   *Server
+	egress   chan Event
+	clientId string
 }
 
 func NewClient(wsConn *websocket.Conn, server *Server) *Client {
+	id := wsConn.LocalAddr().String()
 	return &Client{
-		wsConn: wsConn,
-		server: server,
-		egress: make(chan Event),
+		wsConn:   wsConn,
+		server:   server,
+		egress:   make(chan Event),
+		clientId: id,
 	}
 }
 
@@ -42,8 +45,10 @@ func (c *Client) readMessages() {
 		log.Println(err)
 		return
 	}
-
 	c.wsConn.SetPongHandler(c.pongHandler)
+
+	// Uncomment if you want to set  read Messages size limit
+	// wsConn.SetReadLimit(511)
 
 	for {
 		var req Event

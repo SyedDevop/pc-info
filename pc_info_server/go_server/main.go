@@ -11,8 +11,10 @@ import (
 )
 
 type Server struct {
-	clients   ClientList
-	handelers map[string]EventHandler
+	clients      ClientList
+	handelers    map[string]EventHandler
+	setClose     func(code int, text string) error
+	setOnConnect func(c *Client)
 	sync.RWMutex
 }
 
@@ -40,27 +42,15 @@ func (s *Server) wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("could not upgrade:", err.Error())
 	}
-	// defer wsConn.Close()
+
 	// // event loop
-	// wsConn.SetCloseHandler(func(_code int, _text string) error {
-	// 	// on disconnect method
-	// 	fmt.Println("Client disconnected")
-	// 	return wsConn.Close()
-	// })
-	//
-	// fmt.Println("Client connected:", wsConn.RemoteAddr().String())
-	//
-	// wsConn.WriteMessage(websocket.TextMessage, []byte("Hello from servers"))
-	// for {
-	// 	var msg any
-	// 	err := wsConn.ReadJSON(&msg)
-	// 	if err != nil {
-	// 		fmt.Println("error reading message", err.Error())
-	// 		break
-	// 	}
-	// 	fmt.Println("message Received:", msg)
-	// }
+	wsConn.SetCloseHandler(func(code int, text string) error {
+		// on disconnect method
+		s.setClose(code, text)
+		return nil
+	})
 	client := NewClient(wsConn, s)
+	s.setOnConnect(client)
 	s.addClient(client)
 
 	// String client process
@@ -72,10 +62,7 @@ func (s *Server) addClient(client *Client) {
 	s.Lock()
 	defer s.Unlock()
 
-	clientId := client.wsConn.LocalAddr().String()
-
-	s.clients[client] = clientId
-	fmt.Println("New client connected:", clientId)
+	s.clients[client] = client.clientId
 }
 
 func (s *Server) removeClient(client *Client) {
@@ -94,7 +81,6 @@ func (s *Server) setupEventHandlers() {
 
 func SendIsMute(event Event, c *Client) error {
 	fmt.Println(event)
-
 	return nil
 }
 
@@ -109,9 +95,25 @@ func (s *Server) routeEvent(event Event, c *Client) error {
 	}
 }
 
+func (s *Server) onClose(f func(code int, text string) error) {
+	s.setClose = f
+}
+
+func (s *Server) onConnect(f func(c *Client)) {
+	s.setOnConnect = f
+}
+
 func main() {
 	router := mux.NewRouter()
 	server := NewServer()
+	server.onClose(func(code int, text string) error {
+		fmt.Println("Client disconnected")
+		fmt.Println(code)
+		return nil
+	})
+	server.onConnect(func(c *Client) {
+		fmt.Println("New client connected:", c.clientId)
+	})
 	router.HandleFunc("/socket", server.wsEndpoint)
 	fmt.Println("Server started @ http://localhost:3000")
 	http.ListenAndServe(":3000", router)
