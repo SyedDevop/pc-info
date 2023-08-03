@@ -4,6 +4,12 @@ import { NodeAudioVolumeMixer as volume } from "node-audio-volume-mixer";
 import os from "os";
 const PORT = 3000;
 
+interface AudioState {
+  isMute: boolean;
+  audioProcess: { pid: number; name: string }[];
+  volume: number;
+}
+
 interface ServerToClientEvents {}
 
 interface ClientToServerEvents {
@@ -12,6 +18,7 @@ interface ClientToServerEvents {
   getMac: (_: null, cal: (mac: string) => void) => void;
   setVolume: (vol: number) => void;
   getVolume: (_: null, cal: (vol: number) => void) => void;
+  getAudioState: (_: null, cal: (audioState: AudioState) => void) => void;
 }
 
 interface InterServerEvents {
@@ -42,6 +49,7 @@ instrument(io, {
 
 io.on("connection", (socket) => {
   console.log(`socket ${socket.id} connected`);
+  socket.on("getAudioState", (_, cal) => cal(getAudioState()));
 
   socket.on("isMute", (_, cal) => cal(volume.isMasterMuted()));
 
@@ -55,11 +63,23 @@ io.on("connection", (socket) => {
   });
   socket.on("setMute", (state) => {
     volume.muteMaster(state);
+    const a = volume.getAudioSessionProcesses();
+    console.table(a);
   });
+
   socket.on("disconnect", (reason) => {
     console.log(`socket ${socket.id} disconnected due to ${reason}`);
   });
 });
+
+function getAudioState(): AudioState {
+  return {
+    isMute: volume.isMasterMuted(),
+    audioProcess: volume.getAudioSessionProcesses(),
+    volume: volume.getMasterVolumeLevelScalar() * 100,
+  };
+}
+
 function getMacAddress() {
   const interfaces = os.networkInterfaces();
   for (const name of Object.keys(interfaces)) {
