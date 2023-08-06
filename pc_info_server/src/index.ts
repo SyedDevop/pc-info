@@ -2,11 +2,11 @@ import { Server } from "socket.io";
 import { instrument } from "@socket.io/admin-ui";
 import { NodeAudioVolumeMixer as volume } from "node-audio-volume-mixer";
 import os from "os";
+
 const PORT = 3000;
 
 interface AudioState {
   isMute: boolean;
-  audioProcess: { pid: number; name: string }[];
   volume: number;
 }
 
@@ -49,6 +49,7 @@ instrument(io, {
 
 io.on("connection", (socket) => {
   console.log(`socket ${socket.id} connected`);
+
   socket.on("getAudioState", (_, cal) => cal(getAudioState()));
 
   socket.on("isMute", (_, cal) => cal(volume.isMasterMuted()));
@@ -75,7 +76,6 @@ io.on("connection", (socket) => {
 function getAudioState(): AudioState {
   return {
     isMute: volume.isMasterMuted(),
-    audioProcess: volume.getAudioSessionProcesses(),
     volume: volume.getMasterVolumeLevelScalar() * 100,
   };
 }
