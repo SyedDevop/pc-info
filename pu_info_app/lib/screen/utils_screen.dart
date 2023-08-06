@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pu_info_app/models/audio_modle.dart';
+import 'package:pu_info_app/models/audio_model.dart';
 import 'package:pu_info_app/widget/ui/audio_nob.dart';
 
 import 'package:pu_info_app/socket_server.dart';
