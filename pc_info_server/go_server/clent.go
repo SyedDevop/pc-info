@@ -100,6 +100,9 @@ func (c *Client) writeMessages() {
 	}
 }
 
+func (c *Client) emit(id string, data any) {
+}
+
 func (c *Client) pongHandler(pongMsg string) error {
 	return c.wsConn.SetReadDeadline(time.Now().Add(pongWait))
 }

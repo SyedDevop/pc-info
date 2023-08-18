@@ -113,6 +113,7 @@ func main() {
 	})
 	server.onConnect(func(c *Client) {
 		fmt.Println("New client connected:", c.clientId)
+		c.emit("hello", "server data")
 	})
 	router.HandleFunc("/socket", server.wsEndpoint)
 	fmt.Println("Server started @ http://localhost:3000")
